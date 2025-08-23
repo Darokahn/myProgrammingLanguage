@@ -15,7 +15,7 @@ This language is strongly typed, with the exception of most numeric conversions 
     }
 
     using (
-        int a -> char*: intToString(a, buffer, &index); // `a` is an arbitrary name and is not declared/visible outside this line
+        int a -> char*: intToString(a, buffer, &index); // `a` is an arbitrary placeholder and is not declared/visible outside this line
         struct myData a -> int: a.x;
         struct myData a -> char*: a.message;
     ) {
@@ -24,4 +24,6 @@ This language is strongly typed, with the exception of most numeric conversions 
         puts(x);
         puts(d);
     }
+    puts(d) // This won't work, because it's outside the `using` block.
 
+An alternative to using a conversion table would be the "type resolution" operator. This operator (which I haven't picked a symbol for) allows the compiler, when a struct is used where its type is not expected, to *search* the struct for a matching type and use that instead. So if my struct has a `position` struct inside, and `move` expects a `position`, I can prepend my struct with the type resolution operator and expect the compiler to find the `position` member inside my struct. I haven't thought fully about the implications of this, but I think it can be recursive, searching fields themselves for the proper type.

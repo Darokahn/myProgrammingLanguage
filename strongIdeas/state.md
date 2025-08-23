@@ -8,7 +8,7 @@ functions are declared as:
 returntype state args name;
 
     void
-    state {int innerValue}
+    state {int innerValue;}
     (int x, int y) func {
         ...
     }
@@ -18,7 +18,7 @@ returntype state args name;
 
 `state`s gotten via `stateof` can be called alone, because they are tied to a specific function. But if they're defined, used as the state value in several functions, and then created as an instance later, you can use the `@` operator to attempt to call any function with that instance:
 
-    state myState {int innerValue};
+    state myState {int innerValue;};
 
     void
     state myState
@@ -33,7 +33,7 @@ returntype state args name;
     }
 
     void
-    state {float w}
+    state {float w;}
     (float x) func3 {
         ...
     }
