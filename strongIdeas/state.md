@@ -1,4 +1,4 @@
-functions can take a state as an invisible first parameter, much like object-oriented patterns.
+# functions can take a state as an invisible first parameter, much like object-oriented patterns.
 
 `state` is a new type of struct which is allowed to correspond to a function. A state which corresponds to a function may be called as an alias for that function, and when called this way, it passes itself (in a pointer) as the invisible first parameter.
 

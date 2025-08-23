@@ -1,4 +1,4 @@
-`_` is NOT a valid name character. Instead, it is the namespace resolver.
+# `_` is NOT a valid name character. Instead, it is the namespace resolver.
 
     namespace MyNamespace {
         int x = 0;
