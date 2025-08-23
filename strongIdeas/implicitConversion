@@ -1,6 +1,10 @@
 `using` and implicit conversions
 This language is strongly typed, with the exception of most numeric conversions that C handles implicitly. However, by defining a conversion table with `using`, you can inform the compiler which implicit conversions to use, and what expression to use for conversion. `using` blocks should encapsulate specific code that wants convenient casting, not a whole project. I haven't come up with the syntax yet, but a `using` table can be predefined once and deployed where needed. Probably quite similar to defining and using structs.
 
+    struct myData {
+        int x;
+        char* message;
+    };
     char buffer[1024];
     int index = 0;
 
@@ -11,7 +15,12 @@ This language is strongly typed, with the exception of most numeric conversions 
 
     using (
         int a -> char*: intToString(a, buffer, &index); // `a` is an arbitrary name and is not declared/visible outside this line
+        struct myData a -> int: a.x;
+        struct myData a -> char*: a.message;
     ) {
+        struct myData d = {.x = 10, .message="hello, world!"};
         int x = 10;
         puts(x);
+        puts(d);
     }
+
