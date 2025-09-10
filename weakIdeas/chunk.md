@@ -3,7 +3,7 @@
 The aim of the `chunk` structure is to allow the programmer to group related data in a single heap allocation.
 Chunk structures may not be declared directly; the compiler will only allow pointer declarations, and all operations will be in terms of chunk pointers.
 
-At runtime, it will save bytewise indices from the end of the static portion of the struct.
+At runtime, it will save indices from the end of the static portion of the struct.
 These will mostly be used by compiler-generated code for finding each array when requested, but they will also be available through operators (in a similar vein to `sizeof`).
 This is possible manually using a single trailing FAM and partitioning it carefully, but alignment is the major foot gun in this case.
 There will be some syntactical operation for initializing a new chunk pointer, passing the size of each member. Not sure about this yet.
