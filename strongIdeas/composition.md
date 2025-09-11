@@ -31,11 +31,11 @@ If the function takes a pointer, but the inner routed struct is stored as a comp
 To restate that potentially unclear statement:
 
 if function takes type `struct a` and my struct contains one routed `struct a`:  
-    passing my struct to the function will implicitly use the routed struct a.
+- passing my struct to the function will implicitly use the routed struct a.
 
-if function takes type `struct a*` and my struct contains `struct a`:
-    passing my struct to the function will not implicitly use the routed struct a.
-    passing the address of my struct to the function will implicitly use the address of the routed struct a.
+if function takes type `struct a*` and my struct contains `struct a`:  
+- passing my struct to the function will not implicitly use the routed struct a.
+- passing the address of my struct to the function will implicitly use the address of the routed struct a.
 
 ```c
     void printPoint(struct point p) {
