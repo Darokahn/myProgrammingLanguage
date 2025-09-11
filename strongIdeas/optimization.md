@@ -1,0 +1,3 @@
+If my head is on straight, there's a certain amount of optimization you can do post-compilation by examining an executable. In fact, it should at least approach what you can do at compiletime. The benefit would be that anything statically linked would be able to optimize against everything else, whereas compiling to object files puts up curtains that forbid this.
+
+Compilers should produce straightforward and unoptimized executables, with post-compilation optimization as a processor on the final product. That way, debug builds are the default, you can ship debug builds, those builds can be optimized on the end machine, and if the optimization breaks something, they can default to the debug product.
