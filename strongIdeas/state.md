@@ -48,6 +48,6 @@ returntype state args name;
 A state will always be able to see functions declared in the same namespace, even without namespace resolution.
 
 This creates lightweight, function-first data-function unions, being somewhat agnostic between functional and OOP paradigms.
-It also clearly separates which members are compiletime and which ones are stored in the state at runtim, which C++ does not do. This helps the programmer keep memory in mind when declaring states and structs.
+It also clearly separates which members are compiletime and which ones are stored in the state at runtime, which C++ does not do. This helps the programmer keep memory in mind when declaring states and structs.
 Vtable method calls are missing from syntax, but perfectly implementable.
-Inheritance is missing from syntax by design. Favor composition.
+Inheritance is missing from syntax by design. Favor composition. See notes on compositions in composition.md.
