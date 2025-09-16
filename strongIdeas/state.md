@@ -2,6 +2,10 @@
 
 `state` is a new type of struct which is allowed to correspond to a function. A state which corresponds to a function may be called as an alias for that function, and when called this way, it passes itself (in a pointer) as the invisible first parameter.
 
+Functions with `state` borrow `this` semantics from C++; `this` works pretty much as you would expect.
+
+struct pointers can be implicitly dereferenced using `struct.member` rather than requiring  struct->member`. Therefore, you can use `this.member` as well as `this->member`. A third option is that, in state-having functions, plain `.member` or `->member` is implicitly `this.member` or `this->member`.
+
 Remember that for most purposes, a `state` is equivalent to a struct. It has additional features, but you can reason about things like lifetime, layout, etc. as if it was a struct.
 
 You can get the state required by a function by using `stateof`. `stateof function` can be used as an alias for the actual definition. This is the recommended way to use states, defining them anonymously in a function declaration and getting them for later use via `stateof`.
@@ -12,7 +16,7 @@ returntype state args name;
     void
     state {int innerValue;}
     (int x, int y) func {
-        ...
+        printf("%d, %d, %d\n", x, y, this->innerValue);
     }
 
     stateof func x = {1};
@@ -25,7 +29,7 @@ returntype state args name;
     void
     state myState
     (int x, int y) func1 {
-        ...
+        innerValue += x + y;
     }
 
     void
