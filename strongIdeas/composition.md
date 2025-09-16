@@ -115,3 +115,5 @@ The `prior` qualifier would *only* be valid on this member, not on any subsequen
 This would also apply to first-class member names. They would need to be declared before any routed struct members that shadow them, with the `prior` keyword, to avoid an error. Unhandled first-class member shadowing would cause an error because shadowing them would make them inaccessible.
 
 It may be best practice to tolerate the warnings about shadowing until the layout of a struct is finalized, to avoid silencing them even for future additions.
+
+Additionally, the *best* solution to all of these conflicts is of course to rarely run into them. Routing should be used sparingly, as many times it is perfectly tolerable to access subfields. Core functionality should be routed up, while things that have to do with the details of functionality should stay associated with those details. Writing code this way should minimize cases of conflict.

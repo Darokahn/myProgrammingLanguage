@@ -2,6 +2,8 @@
 
 `state` is a new type of struct which is allowed to correspond to a function. A state which corresponds to a function may be called as an alias for that function, and when called this way, it passes itself (in a pointer) as the invisible first parameter.
 
+Remember that for most purposes, a `state` is equivalent to a struct. It has additional features, but you can reason about things like lifetime, layout, etc. as if it was a struct.
+
 You can get the state required by a function by using `stateof`. `stateof function` can be used as an alias for the actual definition. This is the recommended way to use states, defining them anonymously in a function declaration and getting them for later use via `stateof`.
 
 functions are declared as:

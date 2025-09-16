@@ -1,6 +1,6 @@
 # `using` and implicit conversions
 
-This language is strongly typed, with the exception of most numeric conversions that C handles implicitly. However, by defining a conversion table with `using`, you can inform the compiler which implicit conversions to use, and what expression to use for conversion. `using` blocks should encapsulate specific code that wants convenient casting, not a whole project. I haven't come up with the syntax yet, but a `using` table can be predefined once and deployed where needed. Probably quite similar to defining and using structs.
+A good language is strongly typed, and my language intends to be. However, in my language, by defining a conversion table with `using`, you can inform the compiler which implicit conversions to use, and what expression to use for conversion. `using` blocks should encapsulate specific code that wants convenient casting, not a whole project. I haven't come up with the syntax yet, but a `using` table can be predefined once and deployed where needed. Probably quite similar to defining and using structs.
 
     struct myData {
         int x;
