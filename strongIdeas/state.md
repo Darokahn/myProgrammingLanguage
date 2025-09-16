@@ -4,7 +4,7 @@
 
 Functions with `state` borrow `this` semantics from C++; `this` works pretty much as you would expect.
 
-struct pointers can be implicitly dereferenced using `struct.member` rather than requiring  struct->member`. Therefore, you can use `this.member` as well as `this->member`. A third option is that, in state-having functions, plain `.member` or `->member` is implicitly `this.member` or `this->member`.
+struct pointers can be implicitly dereferenced using `struct.member` rather than requiring  `struct->member`. Therefore, you can use `this.member` as well as `this->member`. A third option is that, in state-having functions, plain `.member` or `->member` is implicitly `this.member` or `this->member`.
 
 Remember that for most purposes, a `state` is equivalent to a struct. It has additional features, but you can reason about things like lifetime, layout, etc. as if it was a struct.
 
