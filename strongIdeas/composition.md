@@ -2,6 +2,8 @@ Composition should be favored over inheritance, but there are no composition lan
 Inheritance can be considered a form of monogamous composition, where an object is bound singly to its parent.
 Using some basic patterns, we can map composition into inheritance in a way that does not restrict the flexibility of using composition elsewise.
 
+Note that this document does not focus on object oriented method calling, but it is compatible with it. See state.md for my notes on object-oriented state and method calls.
+
 # A struct can route to any of its members, allowing struct.property access instead of struct.member.property access.
 
 ```c
