@@ -45,10 +45,12 @@ returntype state args name;
     }
 
     int () main { // note that omitted state is allowed
-        state myState = {3};
-        myState(); // would fail, because myState is not tied to a function
-        myState@func1(0, 1); // succeeds, because we're telling it which function to use
-        myState@func3(0.1f); // would fail, because the state of func3 is not the same as the one we're using.
+        state myState m1 = {3};
+        stateof func1 m2
+        m1(); // would fail, because m1 is not tied to a function
+        m2(); // succeeds, becuase m2 is tied to a function
+        m1@func1(0, 1); // succeeds, because we're telling it which function to use
+        m1@func3(0.1f); // would fail, because the state of func3 is not the same as the one we're using.
     }
 
 A state will always be able to see functions declared in the same namespace, even without namespace resolution.
