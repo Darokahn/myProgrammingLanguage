@@ -46,7 +46,7 @@ returntype state args name;
 
     int () main { // note that omitted state is allowed
         state myState m1 = {3};
-        stateof func1 m2
+        stateof func1 m2;
         m1(); // would fail, because m1 is not tied to a function
         m2(); // succeeds, becuase m2 is tied to a function
         m1@func1(0, 1); // succeeds, because we're telling it which function to use

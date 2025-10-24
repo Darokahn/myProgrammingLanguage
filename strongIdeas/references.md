@@ -42,7 +42,7 @@ If the expression includes arithmetic, this promotes it to a sequence and makes 
 
 `arr[0, T]` is valid and may be used to support FAMs.
 
-references to sequences, and generally nesting of all three types, is legal.
+references to sequences, and generally nesting of all three types, is legal. I haven't thought this all the way through, but I think the rules for it should be straightforward.
 
 type punning through casts is allowed.
 
@@ -52,7 +52,7 @@ There may be reason to borrow C++ rules about nullptr and references, namely tha
 
 `checked` references may be a good way to address generally unsafe operations that cost runtime to protect against.
 
-A `checked` reference opts in to null checks at runtime. If a variable is checked, assigning to it must be wrapped in the `check` construct: `check(expression) {fail path}`
+A `checked` reference opts in to null checks at runtime. If a variable is checked, using it must be wrapped in the `check` construct: `check(expression) {fail path}`
 
 A `checked` reference must test its success on each new assignment. The failure path should guarantee that no path dereferencing the reference is subsequently executed. It may be simpler to say that backwards, that a dereference must prove it can only happen after a successful check. The compiler will analyze the function to determine whether this is the case and error when it is not.
 
@@ -72,14 +72,14 @@ The failure path of a check should guarantee that no subsequent path uses the re
     checked ref[int] r;    // Declare a checked reference to int
 
     // Attempt to allocate memory
-    check(r = (ref int)malloc(sizeof(int))) {
+    check(r = malloc(sizeof(int))) {
         // Fail path: malloc returned null
         // Must handle failure explicitly; e.g., exit or return
         fprintf(stderr, "Memory allocation failed!\n");
         exit(1);
     }
 
-    // Success path: r is guaranteed non-null
+    // This dereference can prove that it is never downstream from an unchecked value or a failed check.
     *r = 42;
     printf("Allocated and initialized value: %d\n", *r);
 ```

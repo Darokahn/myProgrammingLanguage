@@ -1,7 +1,7 @@
 # A chunk is a struct with an arbitrary number of trailing Flexible Array Members.
 
 The aim of the `chunk` structure is to allow the programmer to group related data in a single heap allocation.
-Chunk structures may not be declared directly; the compiler will only allow pointer declarations, and all operations will be in terms of chunk pointers.
+Chunk structures may not be declared directly; the compiler will only allow pointer declarations, and all operations will be in terms of chunk pointers. You cannot dereference a whole chunk struct at once.
 
 At runtime, it will save indices from the end of the static portion of the struct.
 These will mostly be used by compiler-generated code for finding each array when requested, but they will also be available through operators (in a similar vein to `sizeof`).
@@ -16,7 +16,7 @@ However, the compiler will also offer an operator for resizing its arrays at run
 There are a few different ways to store indices, and they all have tradeoffs.
 
 ## bare pointers
-Storing full pointers to the FAM segments is the fastest way to index them at runtime, but it is the most wasteful. In most cases, a 16-bit integer as an index from the end of the struct will be plenty and a 32-bit integer will be overkill.
+Storing full pointers to the FAM segments is the fastest way to index them at runtime, but it is the most wasteful. In most cases, a 16-bit integer as an index from the end of the struct will be plenty and a 64-bit pointer will be overkill.
 
 ## full bytewise indices
 Storing full indicies in absolute bytes to the FAM segments is a way to index directly to each FAM segment with only one addition and one dereference. However, calculating the capacity of a given array (a utility the programmer must have access to) becomes an O(n) runtime operation with the number of FAM segments. The number of FAM segments should not be excessively large, so this isn't a deal-breaker, but it should be considered.

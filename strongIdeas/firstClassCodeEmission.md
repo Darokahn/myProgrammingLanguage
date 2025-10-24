@@ -19,12 +19,19 @@ Note that function literal syntax *only* says, at compile time:
 - evaluate this symbol as the pointer to that function.
 It does not compile code into W^X memory at runtime.
 
-The convention I'm leaving behind had a reason to exist; namely, it allowed compilers to make assumptions about first-class functions. Where the C compiler can make assumptions about functions explicitly declared and defined, it cannot make assumptions about function pointers that may have any value. It also aligns well with how pretty much all existing operating systems assume executable memory and data memory will go in different segments, and it's intuitive with linking. With C's convention, a function name is a compiletime symbol pointing to a fixed spot in the text segment, which is literally named after that symbol, and a function pointer is a runtime value with a real slot in memory. While enough static analysis could bring my language up to speed with C's way of doing things, the developer should be able to declare this intent specifically. The `const` qualifier should essentially turn a function declaration into what it is in C: A guaranteed reference to a point in the text segment that should be named the same way in the executable header. Otherwise, the compiler will create a mangled name for the function.
+The convention I'm leaving behind had a reason to exist; namely, it allowed compilers to make assumptions about first-class functions. Where the C compiler can make assumptions about functions explicitly declared and defined, it cannot make assumptions about function pointers that may have any value. It also aligns well with how pretty much all existing operating systems assume executable memory and data memory will go in different segments, and it's intuitive with linking. With C's convention, a function name is a compiletime symbol pointing to a fixed spot in the text segment, which is literally named after that symbol, and a function pointer is a runtime value with a real slot in memory. While enough static analysis could bring my language up to speed with C's way of doing things, the developer should be able to declare this intent specifically. There are two options here, which are essentially the same thing with different default behavior.
+
+Either functions will be constant compiletime names by default and reassignable when a particular qualifier is used, or that behavior is reversed (reassignable by default, constant when a qualifier is used). The `const` qualifier should essentially turn a function declaration into what it is in C: A guaranteed reference to a point in the text segment that should be named the same way in the executable header. Otherwise, the compiler will create a mangled name for the function. The `dynamic` qualifier should prompt to the compiler that this name is assignable, and should not be inlined unless static analysis can prove this is possible. The `const` behavior should be default, so omission of either qualifier will imply `const`.
+
+`int(void) const main = ${};` // default behavior, `const` can be omitted.
+`int(void) dynamic main = ${};` // allows reassignment
 
 Functions as values in C:
+
     `returntype (*name)(args) = &function;`
 
 functions as values this pseudo-language:
+
     `returntype(args) name = function;`
 
 This may or may not feel like a significant difference, but it really eases the syntax of functions-as-values in my opinion.
