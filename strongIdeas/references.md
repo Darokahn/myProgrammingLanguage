@@ -17,7 +17,7 @@ The three pointer types you really need are **singular**, **plural**, and **arra
 Any pointer type can be composed from these orthogonal properties:
 
 - `mut | immut` - whether it can be an lvalue after initialization
-- `singular | plural` - whether indexing and arithmetic are allowed
+- `singular | plural` - whether indexing and arithmetic are allowed. The `plural` qualifier also takes a compile-time integer bound.
 - `embedded | indirect` - whether it automatically takes up memory on the data structure it belongs to and is assigned to point to that memory
 
 Some of the addr types you can construct from this aren't very safe and others aren't very useful, but all of them make sense.
@@ -26,7 +26,7 @@ Some of the addr types you can construct from this aren't very safe and others a
 
 The declaration for a pointer type is, for example:
 
-`immut plural[5] embedded addr[int] x;
+`immut plural[5] embedded addr[int] x;`
 
 
 Just `addr` is `void*`.
@@ -54,6 +54,12 @@ The value in brackets after plural is *generally* only used by embedded variable
 ### Embedded Semantics
 
 `embedded` means that the memory specified by the declaration will be created either on the stack, in the data segment, or in the struct it's declared inside.
+
+The combination of `embedded` and `immut` means that the value will always point to the same memory location, and that that location is a known offset from its owner data structure (stack, struct, DATA). This should mean that the compiler is free to optimize out actual runtime storage of the value and save it only as a compiletime symbol.
+
+My language actually *requires* this. The standard says that `embedded immut` has no address, and must always be a compiletime symbol.
+
+Attempting to take the address of `embedded immut` is illegal.
 
 ## Initialization vs. Assignment
 
