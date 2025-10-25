@@ -26,7 +26,7 @@ Some of the addr types you can construct from this aren't very safe and others a
 
 The declaration for a pointer type is, for example:
 
-`immut plural[5] embedded addr[int] x;
+`immut plural[5] embedded addr[int] x;`
 
 
 Just `addr` is `void*`.
