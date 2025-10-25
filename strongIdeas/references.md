@@ -25,9 +25,9 @@ Some of the addr types you can construct from this aren't very safe and others a
 ## Syntax
 
 The declaration for a pointer type is, for example:
-```
-immut plural[5] embedded addr[int] x;
-```
+
+`immut plural[5] embedded addr[int] x;
+
 
 Just `addr` is `void*`.
 
@@ -112,3 +112,4 @@ I think the proof of this system and its validity is that only one of the pointe
 Note that `mut + embedded` is by far the least useful combination, with the most niche cases. But note also that it does something subtle to compilation and static analysis. `immut + embedded` pretty much grants the compiler executive permission to turn that address into a compiletime symbol. But `mut + embedded` requires the compiler to store a real variable with a reference to the allocated segment, with a bit of ambiguity as to where. In a struct, that could lead to some unexpected results. The definition for this should be that the pointer is allocated first, with the memory it points to going at the next properly padded address.
 
 I think the cognitive load is negligible, because the language only truly asks the user to engage with the core 3 sugared types. Everything is possible with just those 3, and knowing about the intricacies of the rest is the precursor to even wanting to use them. When using other types, they should probably be typedef'd to user-defined sugar as well. People who understand them can easily write libraries so people who don't want to engage with their inner workings can still use them.
+

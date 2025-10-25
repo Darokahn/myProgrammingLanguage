@@ -12,29 +12,3 @@ break and continue statements apply to the code block they are placed in. `break
     int i = 0;
     {printf("%d\n", i);}[i++ < 10] // a do-while loop
 ```
-```
-    void(data {int x;} int(int arg)* func, int x) addMaker = ${
-        *func = ${
-            return ?(x) + arg;
-        };
-    };
-
-    int(int argc, char* argv[]) main = ${
-        {
-            [argc < 2] break;
-            [strcmp(argv[1], "hello") == 0] {
-                printf("argument was hello\n");
-            } 
-            | {
-                printf("argument was not hello\n");
-            };
-        };
-        data {int;} int(int) add1;
-        addMaker(1, &add1);
-        int i = 0;
-        [i < 10] {
-            printf("i is %d\n", i);
-        } [i = add1(i)];
-        return 0;
-    };
-```
