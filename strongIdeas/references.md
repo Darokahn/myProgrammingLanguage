@@ -101,12 +101,24 @@ Here is a write-up of each pointer type, whether it's sugared, and whether it's 
 - Address of some value, assumed to be plural, but not enforced.
 - Good to use as a slice or view of an `arr` or `sequence`.
 ## mut singular embedded addr[T]
-- Address of an int that is placed on the stack. Can be reassigned. Not much of a reason to want to do that.
-- Could be used for a variable that is *either* an alias for another variable *or* its own unique value. Not sure, that seems silly and unsafe.
+- Address of an int that is placed on the stack. Can be reassigned. Not super obviously useful.
+- Can be used for shorter code when something is *either* a default value *or* a reference to incoming param.
+- Note `mut singular`, not `immut singular`, so it's not auto-deref-ed and not incredibly ergonomic to use as a reference.
+- Hard to defend its use case, but it might be useful when you would do:
+```
+    int x = 10;
+    func(&x);
+```
+instead:
+```
+    mut singular embedded addr[int] x = 10;
+    func(x);
+```
+There's a semi-common pattern where several functions which need to be called in a row take `T*` and expect it to point to local storage, so you end up using the address of your variable more often than you actually use the variable. That's where you might create a pointer that's an alias to your variable, so you don't have to keep taking its address. This type both stores your value and exists as a pointer to it at the same time.
 ## mut singular indirect addr[T]
 - Reassignable reference to any `T`. Pretty useful.
 ## mut plural[n] embedded addr[T]
-- Walkable stack allocated array. Can be used to iterate over stack data without using an index or a new pointer alias.
+- Walkable stack allocated array. Can be used to iterate over stack data without using an index or a new pointer alias. Can also be used to swap stack arrays.
 ## mut plural[n] indirect addr[T]
 - Freest pointer type. Used for pretty much anything if other rules get in the way. Especially useful for tracking a dynamic sequence of elements that may move around memory, I.E. via realloc.
 - `seq[T]` desugars to this.

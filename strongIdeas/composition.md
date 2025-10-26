@@ -47,6 +47,26 @@ Note that in this case, we would not say that the character *is* a position; We 
     printPoint(c); // works, because `substitute` tells the compiler `struct character` can be implicitly converted to its inner member with type point.
 ```
 
+C allows some screwy implicit substitution when working with unions, to make them more ergonomic. In this system, all of those implicit ergonomic conversions are wiped, and they can be specified explicitly via `substitute`.
+
+```c
+    union Number {
+        float f;
+        uint32_t bits;
+    };
+
+    union Number n = 0.1; // LEGAL in C, ILLEGAL in my type system. The substitutability was not explicitly named.
+
+
+    union Number {
+        substitute float f;
+        uint32_t bits;
+    };
+    
+    union Number n = 0.1; // This makes it legal.
+    
+```
+
 If the function takes a pointer, but the inner substituted struct is stored as a complete struct rather than a pointer, then a pointer to the substituting struct may be coerced into a pointer to the substituted struct.
 
 To restate that potentially unclear statement:
