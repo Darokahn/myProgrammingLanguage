@@ -10,7 +10,7 @@ The three pointer types you really need are **singular**, **plural**, and **arra
 
 - **Singular** is like C++ reference: A pointer to just one value, with no ambiguity as to whether it is a pointer to the beginning of several values.
 - **Plural** is like a raw C pointer, allowing indexing and arithmetic.
-- **Array** is like a C array, allocating its space on the stack and being immutable (not a valid lvalue).
+- **Array** is like a C array, allocating its space on the stack and being immutable (not a valid lvalue). There is no reasonable or ergonomic way to decouple statically allocating memory in a data structure from acquiring that memory via a named variable, so this type must have a place.
 
 ## Compositional Rules
 
@@ -39,13 +39,17 @@ That's a lot to type, and comes with overhead. These three cases have sugar:
 - `seq[T]` = `mut plural[] indirect addr[int]`
 - `arr[n, T]` = `immut plural[n] embedded addr[T]`
 
-The 5 non-sugared address types would be accessible to the programmer, but the language would recommend using the core 3 sugared ones.
+The default for each qualifier is `mut`, `singular`, and `dynamic`. This makes `addr[T]` technically sugar for reassignable singular references, but only because of the defaults.
+
+The 4 non-sugared address types would be accessible to the programmer, but the language would recommend using the core 4 sugared ones.
 
 ## Special Cases and Edge Cases
 
+By covering every corner of a 2x2x2 matrix, this system encounters a little bit of "you can do that, but why?" I generally find this acceptable, and at the very worst, a compiler warning can flag usages that probably shouldn't happen.
+
 ### `mut embedded`
 
-The `mut embedded` combination is generally nonsense as we don't ever really want to leave a stack allocation behind by reassigning the variable that points to it, but I don't want to take away the freedom. It allows walkable stack arrays without declaring a new pointer that aliases the stack allocation, and maybe some other tricks.
+The `mut embedded` combination is generally nonsense as we would rarely want to leave a stack allocation behind by reassigning the variable that points to it, but I don't want to take away the freedom. It allows walkable stack arrays without declaring a new pointer that aliases the stack allocation, and maybe some other tricks.
 
 ### Plural with Bounds
 
