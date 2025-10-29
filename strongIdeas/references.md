@@ -28,12 +28,9 @@ The declaration for a pointer type is, for example:
 
 `immut plural[5] embedded addr[int] x;`
 
-
-Just `addr` is `void*`.
-
 ## The Three Sugared Types
 
-That's a lot to type, and comes with overhead. These three cases have sugar:
+That's a lot to type, and comes with cognitive overhead. These three cases have sugar:
 
 - `ref[T]` = `immut singular indirect addr[T]`
 - `seq[T]` = `mut plural[] indirect addr[int]`
