@@ -103,19 +103,7 @@ Here is a write-up of each pointer type, whether it's sugared, and whether it's 
 - Good to use as a slice or view of an `arr` or `sequence`.
 ## mut singular embedded addr[T]
 - Address of an int that is placed on the stack. Can be reassigned. Not super obviously useful.
-- Can be used for shorter code when something is *either* a default value *or* a reference to incoming param.
-- Note `mut singular`, not `immut singular`, so it's not auto-deref-ed and not incredibly ergonomic to use as a reference.
-- Hard to defend its use case, but it might be useful when you would do:
-```
-    int x = 10;
-    func(&x);
-```
-instead:
-```
-    mut singular embedded addr[int] x = 10;
-    func(x);
-```
-There's a semi-common pattern where several functions which need to be called in a row take `T*` and expect it to point to local storage, so you end up using the address of your variable more often than you actually use the variable. That's where you might create a pointer that's an alias to your variable, so you don't have to keep taking its address. This type both stores your value and exists as a pointer to it at the same time.
+- Can be used to cast an immediate value to a stack-instantiated pointer and pass it directly in to a function.
 ## mut singular indirect addr[T]
 - Reassignable reference to any `T`. Pretty useful.
 ## mut plural[n] embedded addr[T]
@@ -125,8 +113,6 @@ There's a semi-common pattern where several functions which need to be called in
 - `seq[T]` desugars to this.
 ## addr
 - `void*`. Can only be rvalue for assignment to another pointer type.
-
-I think the proof of this system and its validity is that only one of the pointer types can really be written off as unuseful. `mut singular embedded addr[T]` isn't obviously useful for anything, but the rest actually are. And even that one might not be written off completely, as there's no saying it can't have its utility found in some corner of some codebase.
 
 Note that `mut + embedded` is by far the least useful combination, with the most niche cases. But note also that it does something subtle to compilation and static analysis. `immut + embedded` pretty much grants the compiler executive permission to turn that address into a compiletime symbol. But `mut + embedded` requires the compiler to store a real variable with a reference to the allocated segment, with a bit of ambiguity as to where. In a struct, that could lead to some unexpected results. The definition for this should be that the pointer is allocated first, with the memory it points to going at the next properly padded address.
 
