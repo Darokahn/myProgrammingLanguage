@@ -15,21 +15,25 @@ sub = ${return %0 - %1};
 // Each `%` desugars to the next `n`.
 add = ${return % + %};
 
+print = ${%0@print()};
+
 namespace apple {
     // Define a state type called 'instance'
     // Creates the type 'apple_instance' (namespace_statename convention)
     // States are like structs but can be bound to functions as implicit 'this'
-    state instance;
+    // This is the highest-friction declaration syntax in the language. If it is confusing, read through `strongIdeas/state.md`.
     state instance {
         arr[32, char] name;
         int shine;
-        int state instance (int param1) virtualMethod;
-    };
+        int usestate instance(int param1) virtualMethod;
+    } call init;    // `call init` is a tag-on for a state definition that does three things:
+                    // - create a weak, re-declarable forward declaration in the form `void usestate instance()`
+                    // - demand a definition matching or superceding this declaration, else compiler error
+                    // - call this method on state init
 
     // Function with state 'instance' - takes apple_instance as implicit first param
-    // Parameters: %0 = name (seq[32, char]), %1 = shine (int)
     // .name and .shine are sugar for this.name and this.shine
-    void state instance(seq[32, char] name, int shine) init = ${
+    void usestate instance(seq[32, char] name, int shine) init = ${
         .name = copy name;  // .name accesses state member, 'name' is %0 parameter
         .shine = shine;     // .shine is state member, 'shine' is %1 parameter
         .instance = ${
@@ -62,7 +66,7 @@ namespace greenApple {
     // Note: no print() defined here, will delegate to apple::print via 'inner'
 }
 
-main = ${
+int(void) main = ${
     // Declare an apple_instance (uninitialized, like C structs)
     apple_instance a;
 

@@ -1,0 +1,23 @@
+// I want some way to do generic data structures. I already have generic functions that work by omitting type information and allowing it to resolve at callsite.
+// I don't like C++ or rust syntax with `template <T>` etc. Very verbose, very gross, and half of what makes both languages a headache to look at (the other half being :: spam)
+// I will think of some alternative. For now, here is a linked list that works specifically with ints.
+
+// Pointers are compositional under the hood, but programmers only need to know about a few types.
+
+// ref[T] is not retargetable, refers to one indirect item.
+// arr[n, T] is not retargetable, refers to several embedded items
+//
+
+namespace linkedList {
+    // `state t` is a forward declaration by itself, so `t` can be referred to from inside the state without any extra work.
+    state t {
+        int data;
+         ptr[state t] next;
+    };
+
+    ref[state t]    // return type
+    usestate t () next = ${
+        // conversion from `ptr` to `ref` is okay implicitly, because rules are added instead of subtracted.
+        return .next;
+    };
+}

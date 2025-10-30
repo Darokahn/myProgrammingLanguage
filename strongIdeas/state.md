@@ -2,44 +2,59 @@
 
 `state` is a new type of struct which is allowed to correspond to a function. A state which corresponds to a function may be called as an alias for that function, and when called this way, it passes itself (in a pointer) as the invisible first parameter.
 
-Functions with `state` borrow `this` semantics from C++; `this` works pretty much as you would expect.
+Functions with `usestate` use `this`, but with some differences to how it is commonly used.
 
-Due to the semantics of references outlined in `references.md` (which I intend to compose with this idea), immutable singular pointers are dereferenced automatically. You can use `struct.member` rather than requiring  `struct->member`. Therefore, you use `this.member` instead of `this->member`. A third option is that, in state-having functions, plain `.member` or `->member` is implicitly `this.member` or `this->member`.
+Due to the semantics of references outlined in `references.md` (which I intend to compose with this idea), immutable singular pointers are dereferenced automatically. You can use `struct.member` rather than requiring  `struct->member`. Therefore, you use `this.member` instead of `this->member`. A third option is that, in state-having functions, plain `.member` is implicitly `this.member`.
 
 Remember that for most purposes, a `state` is equivalent to a struct. It has additional features, but you can reason about things like lifetime, layout, etc. as if it was a struct.
 
-You can get the state required by a function by using `stateof`. `stateof function` can be used as an alias for the actual definition. This is the recommended way to use states, defining them anonymously in a function declaration and getting them for later use via `stateof`.
+You can get the state required by a function by using `stateof`. `stateof function` can be used as an alias for the actual definition. This is the functional programming oriented way to use states, defining them anonymously in a function declaration and getting them for later use via `stateof`.
 
 functions are declared as:
-returntype state args name;
 
+`returntype usestate args name;`
+
+```c
     void
-    state {int innerValue;}
+    usestate {int innerValue;}
     (int x, int y) func {
-        printf("%d, %d, %d\n", x, y, this->innerValue);
+        printf("%d, %d, %d\n", x, y, .innerValue);
     }
 
     stateof func x = {1};
     x(0, 0);
+```
+
+This makes function declarations that use state somewhat heavy. This is okay, and I don't think there's a better way to explicitly define the information a function state needs to use.
+
+This language takes after C++ when declaring struct data types, but not state. struct data types can be specified by either `struct name` or just `name` without a typedef, exactly as C++. However, `state` variables must always be qualified by `state`. In function declarations, `usestate state T` is redundant, and `usestate` is therefore a specialized version of `state` that also means "this function *uses* this state".
+
+The shape of a declaration alone is enough for the compiler to know how to treat it:
+
+- First, it consumes the return type. At this point, it doesn't know whether this declaration is a function or not.
+- Second, it knows that the next character is either open parentheses for the params list (this function has no state) or a name. If it finds a name, it checks whether the name is `state`. If it is, this is a state function. If not, this is a regular variable. Unlike C, type names become reserved after definition and cannot be used for instances.
+- Third, it verifies that the rest of the declaration can satisfy the assumption it made by peeking at the next token type. If the name does not specify a state type, this is not a valid function declaration. If the parentheses do not enclose valid parameter definitions, it is likewise not valid.
+
+It is recommended to declare the components of state-having functions on separate lines for clarity.
 
 `state`s gotten via `stateof` can be called alone, because they are tied to a specific function. But if they're defined, used as the state value in several functions, and then created as an instance later, you can use the `@` operator to attempt to call any function with that instance:
 
     state myState {int innerValue;};
 
     void
-    state myState
+    usestate myState
     (int x, int y) func1 {
         innerValue += x + y;
     }
 
     void
-    state myState
+    usestate myState
     (char* message) func2 {
         ...
     }
 
     void
-    state {float w;}
+    usestate {float w;}
     (float x) func3 {
         ...
     }
@@ -60,25 +75,36 @@ It also clearly separates which members are compiletime and which ones are store
 Vtable method calls are missing from syntax, but perfectly implementable.
 Inheritance is missing from syntax by design. Favor composition. See notes on compositions in composition.md.
 
-Addendum:
-
 `state` structs can specify a function they call when initialized. I am chagrin to borrow from C++, but the way it works there is pretty good. When the function your `state` struct refers to takes several arguments, you pass them at initialization with parentheses after the variable name.
 
+`call func` creates weak forward declaration with the signature `void usestate T ()`. This is re-declarable, as long as the specified parts match. You can also just define it if that declaration is suitable.
 
 ```
     namespace apple {
-        // I will introduce syntax for avoiding this forward declaration somehow
-        state instance;
-        void state instance(int) init;
         state instance {
             int inner;
         } call init;
+
         init = ${
-            .inner = i;
+            .inner = 0;
         };
     }
 
     main = ${
-        apple_instance a(1);
+        // this calls init
+        apple_instance a;
+    };
+```
+
+Proposed feature:
+
+`name name` is not a valid pattern of tokens, at least not after type tokens have been resolved to types. `name name` can be desugared to `name@name`, allowing some nice function call patterns.
+
+```c
+    int(void) main = ${
+        string_t s("Hello, world!");
+        if [s contains('H')] {
+            printf("%s contains H\n", s.inner);
+        }
     };
 ```

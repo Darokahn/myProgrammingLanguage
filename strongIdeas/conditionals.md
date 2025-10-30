@@ -19,3 +19,22 @@ Break and continue statements apply to the code block they are placed in. `break
         printf("%d\n", i);
     }[i++ < 10] // a do-while loop
 ```
+
+The main drawback of this is that it takes getting used to, but I think it's an elegant and compositional way to handle control flow. I also think that with some syntax highlighting and experience reading/writing this language, it will not cost any cognitive overhead.
+
+However, it may be useful to allow nullable identifiers, functioning like how `#define identifier` with nothing after it works in C. Then, programmers are allowed to define style guides where common control flow signal words are used just to annotate code.
+
+```c
+    nullword if;
+    nullword while;
+
+    if [x == true] {
+    };
+
+    while [x == true] {
+    } [true];
+```
+
+IDEs, or possibly even compilers, could support this style and make warnings when it is not followed properly.
+
+The goal is not necessarily to create a new, ergonomic way to write control flow. Instead, it is to make control flow a compositional property that follows from simple rules.
