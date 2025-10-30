@@ -4,7 +4,7 @@
 
 Functions with `state` borrow `this` semantics from C++; `this` works pretty much as you would expect.
 
-struct pointers can be implicitly dereferenced using `struct.member` rather than requiring  `struct->member`. Therefore, you can use `this.member` as well as `this->member`. A third option is that, in state-having functions, plain `.member` or `->member` is implicitly `this.member` or `this->member`.
+Due to the semantics of references outlined in `references.md` (which I intend to compose with this idea), immutable singular pointers are dereferenced automatically. You can use `struct.member` rather than requiring  `struct->member`. Therefore, you use `this.member` instead of `this->member`. A third option is that, in state-having functions, plain `.member` or `->member` is implicitly `this.member` or `this->member`.
 
 Remember that for most purposes, a `state` is equivalent to a struct. It has additional features, but you can reason about things like lifetime, layout, etc. as if it was a struct.
 
@@ -59,3 +59,26 @@ This creates lightweight, function-first data-function unions, being somewhat ag
 It also clearly separates which members are compiletime and which ones are stored in the state at runtime, which C++ does not do. This helps the programmer keep memory in mind when declaring states and structs.
 Vtable method calls are missing from syntax, but perfectly implementable.
 Inheritance is missing from syntax by design. Favor composition. See notes on compositions in composition.md.
+
+Addendum:
+
+`state` structs can specify a function they call when initialized. I am chagrin to borrow from C++, but the way it works there is pretty good. When the function your `state` struct refers to takes several arguments, you pass them at initialization with parentheses after the variable name.
+
+
+```
+    namespace apple {
+        // I will introduce syntax for avoiding this forward declaration somehow
+        state instance;
+        void state instance(int) init;
+        state instance {
+            int inner;
+        } call init;
+        init = ${
+            .inner = i;
+        };
+    }
+
+    main = ${
+        apple_instance a(1);
+    };
+```

@@ -1,3 +1,5 @@
+~This document is the old version of a more refined idea, which is under the same name in ../strongIdeas~
+
 # C pointers are kind of broken, and C++ adds gas to the fire.
 
 C has a minor issue in that int* could refer to one int, or it could refer to the first of several. Pointers are read heads into the vast void of memory, and we derive different ways of thinking about them by using discipline.
