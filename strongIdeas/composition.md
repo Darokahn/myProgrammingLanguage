@@ -25,7 +25,7 @@ The `route` qualifier signals to the compiler that members of `position` can be 
 
 Via this pattern, `struct character` effectively inherits the members of `point`.
 
-Note that in this case, we would not say that the character *is* a position; We would say they *Have* a position. However, this distinction isn't super important under the routing pattern! You can choose to route either only one member and say the object *is* that member, or route several members and say it *has* all those members.
+Note that in this case, we would not say that the character *is* a position; We would say they *Have* a position. However, this distinction isn't super important under the routing pattern! You can choose to route either only one member and say the object *is* that member, or route several members and say it *has* all those members.Just as well, you can conceptually say it *is* the first type you route, while only *having* the rest. The difference is trivial, and you generally only need to think about how to pragmatically solve your problem. If you just use the feature in the obvious way, you will use composition where appropriate and inheritence where appropriate.
 
 # A struct can substitute to any of its members, allowing it to be implicitly converted to that type via substitution.
 
