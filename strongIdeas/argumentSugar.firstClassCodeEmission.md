@@ -57,14 +57,15 @@ The rules for which assumptions may be made based on the shape of the declaratio
 ### `(declaration) function = (matching typecast) ${};`
 
 - This case allows the compiler to use zero inference and check types completely strictly. Everything else desugars to this after inference.
+- The cast is bound directly to the function literal, allowing parameter name desugaring to occur. The cast validates the shape and may inject parameter declarations into the function body if parameter names are used in the literal.
 
 ### `(declaration) function = ${};`
 
-- The function literal self-compiles to a generic, then is validated against the declaration. This is the recommended form as it keeps type information at the declaration site.
+- The function literal borrows a cast from the variable it's assigned to, lifting it to the canonical declaration.
 
 ### `function = (cast) ${};`
 
-- The cast is bound directly to the function literal, allowing parameter name desugaring to occur. The cast validates the shape and may inject parameter declarations into the function body if parameter names are used in the literal.
+- The function name borrows its type from the cast of the function, lifting it to the canonical declaration.
 
 ### `function = ${};`
 
@@ -82,7 +83,7 @@ You can implicitly enumerate function arguments by omitting the number, consumin
 
 It should be clear once the programmer is familiar with the rules that this consumes `%0` and `%1` sequentially. When used without explicit type annotations, this creates a compile-time generic that is instantiated at each callsite with the appropriate types.
 
-Implicitly enumerated arguments are desugared simply, without considering which branches have run. Each instance is simply preprocessed into `%n`, with `n` being the number of prior enumerated arguments. It does not matter whether that argument had been used explicitly by number, or whether it will be later. Mixing the two is generally inadvisable.
+Implicitly enumerated arguments are desugared simply, without considering which branches will run. Each instance is simply preprocessed into `%n`, with `n` being the number of prior enumerated arguments. It does not matter whether that argument had been used explicitly by number, or whether it will be later. Mixing the two is generally inadvisable.
 
 ## Declaration Shapes
 
