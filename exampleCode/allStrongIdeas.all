@@ -76,7 +76,7 @@ namespace redApple {
         .inner@init("Red", shine);
     };
     
-    // Note: no print() defined here, will delegate to apple::print via 'inner'
+    // Note: no print() defined here, will delegate to apple_print via 'inner'
 }
 
 int(void) main = ${
@@ -100,12 +100,12 @@ int(void) main = ${
     
     // Calls redApple::init with state redApple_instance
     g@init(100);
-    
+
     // g@print() resolution order:
     // 1. Look for print() in redApple namespace with state redApple_instance - not found
     // 2. Delegate via 'inner' - g can substitute as apple_instance
-    // 3. Find apple::print with state apple_instance - found!
-    print(g);
+    // 3. Find apple_print with state apple_instance - found!
+    g@print();
 
     // This suffers no loss of precision, because `sub` can be cast to `float(int, float)`
     float curvedShine = sub(g.shine, 0.1f);

@@ -33,14 +33,16 @@ This language takes after C++ when declaring struct data types, but not state. s
 The shape of a declaration alone is enough for the compiler to know how to treat it:
 
 - First, it consumes the return type. At this point, it doesn't know whether this declaration is a function or not.
-- Second, it knows that the next character is either open parentheses for the params list (this function has no state) or a name. If it finds a name, it checks whether the name is `state`. If it is, this is a state function. If not, this is a regular variable. Unlike C, type names become reserved after definition and cannot be used for instances.
+- Second, it knows that the next character is either open parentheses for the params list (this function has no state) or a name. If it finds a name, it checks whether the name is `usestate`. If it is, this is a state function. If not, this is a regular variable. Unlike C, type names become reserved after definition and cannot be used for instances.
 - Third, it verifies that the rest of the declaration can satisfy the assumption it made by peeking at the next token type. If the name does not specify a state type, this is not a valid function declaration. If the parentheses do not enclose valid parameter definitions, it is likewise not valid.
 
 It is recommended to declare the components of state-having functions on separate lines for clarity.
 
 `state`s gotten via `stateof` can be called alone, because they are tied to a specific function. But if they're defined, used as the state value in several functions, and then created as an instance later, you can use the `@` operator to attempt to call any function with that instance:
 
-    state myState {int innerValue;};
+    state myState {
+        int innerValue;
+    };
 
     void
     usestate myState
@@ -96,18 +98,5 @@ Inheritance is missing from syntax by design. Favor composition. See notes on co
     main = ${
         // this calls init
         apple_instance a;
-    };
-```
-
-Proposed feature:
-
-`name name` is not a valid pattern of tokens, at least not after type tokens have been resolved to types. `name name` can be desugared to `name@name`, allowing some nice function call patterns.
-
-```c
-    int(void) main = ${
-        string_t s("Hello, world!");
-        if [s contains('H')] {
-            printf("%s contains H\n", s.inner);
-        }
     };
 ```
