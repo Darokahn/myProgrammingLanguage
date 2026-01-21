@@ -17,7 +17,7 @@ add = ${return % + %};
 
 print = ${%0@print()};
 
-void(char* message) printHelloAnd = ${
+void(char* message) printHelloAnd = (void(char* message)) ${
     char* message = %0;
     freezeparams;
     printf("Hello %s\n", message);
@@ -28,7 +28,6 @@ namespace apple {
     // Creates the type 'apple_instance' (namespace_statename convention)
     // States are like structs but can be bound to functions as implicit 'this'
     // This is the highest-friction declaration syntax in the language. If it is confusing, read through `strongIdeas/state.md`.
-    int a;
     state instance {
         arr[32, char] name;
         int shine;
@@ -40,13 +39,10 @@ namespace apple {
 
     // Function with state 'instance' - takes apple_instance as implicit first param
     // .name and .shine are sugar for this.name and this.shine
-    void 
-    usestate instance
-    (seq[32, char] name, int shine) 
-    init = ${
-        .name = name;  // .name accesses state member, 'name' is %0 parameter
+    void usestate instance(seq[32, char] name, int shine) init = ${
+        .name = copy name;  // .name accesses state member, 'name' is %0 parameter
         .shine = shine;     // .shine is state member, 'shine' is %1 parameter
-        .virtualMethod = ${
+        .instance = ${
             .shine += param1;
             return .shine;
         };
@@ -54,10 +50,7 @@ namespace apple {
 
     // Function with state but no additional parameters
     // .name and .shine refer to the state's fields
-    void 
-    state instance
-    () 
-    print = ${
+    void state instance() print = ${
         printf("I am a %s apple and my shiny level is %d\n", .name, .shine);
     };
 }
@@ -80,6 +73,7 @@ namespace redApple {
 }
 
 int(void) main = ${
+    printf("%d\n", add(0.1f, 0.1f));
     // Declare an apple_instance (uninitialized, like C structs)
     apple_instance a;
 

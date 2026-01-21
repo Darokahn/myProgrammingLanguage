@@ -17,11 +17,12 @@ functions are declared as:
 ```c
     void
     usestate {int innerValue;}
-    (int x, int y) func {
+    (int x, int y) 
+    myFunc {
         printf("%d, %d, %d\n", x, y, .innerValue);
     }
 
-    stateof func x = {1};
+    stateof myFunc x = {1};
     x(0, 0);
 ```
 
@@ -43,8 +44,9 @@ It is recommended to declare the components of state-having functions on separat
 
     void
     usestate myState
-    (int x, int y) func1 {
-        innerValue += x + y;
+    (int x, int y) 
+    func1 {
+        .innerValue += x + y;
     }
 
     void
@@ -65,6 +67,7 @@ It is recommended to declare the components of state-having functions on separat
         m1(); // would fail, because m1 is not tied to a function
         m2(); // succeeds, becuase m2 is tied to a function
         m1@func1(0, 1); // succeeds, because we're telling it which function to use
+        param1@func(rest of params)
         m1@func3(0.1f); // would fail, because the state of func3 is not the same as the one we're using.
     }
 
