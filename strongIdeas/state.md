@@ -64,7 +64,9 @@ Inheritance is missing from syntax by design. Favor composition. See notes on co
 
 `stateful(type)` can be used to create a block of function declarations that all use the same state.
 
-`stateful(ref[struct {int a; int b;}]) {
-    void(int a, int b) func1 = ${...};
-    int(int x, float y) func2 = ${...};
-}
+```
+    stateful(ref[struct {int a; int b;}]) {
+        void(int a, int b) func1 = ${...};
+        int(int x, float y) func2 = ${...};
+    }
+```
