@@ -2,6 +2,8 @@
 
 For context, this idea expands upon the "First Class Code Emission" document, which unifies functions and function pointers, also giving them more ergonomic syntax.
 
+The gist is that functions and function pointers are unified, declaration syntax is re-ordered so that the name is not inside the signature, and the body of a function is created via a rhs comptime constant. The constant is evaluated at comptime and does not generate code at runtime.
+
 The document also specifies that the function body and the function declaration are distinct, and each has its own type. The type of each one must match for compilation to be successful, but assigning a function body literal to a function declaration will cast the function body to the proper type.
 
 ## Function parameters are referred to via `%n`.

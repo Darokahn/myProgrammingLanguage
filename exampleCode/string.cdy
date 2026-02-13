@@ -1,0 +1,51 @@
+import std;
+
+namespace utf8 {
+    struct t {
+        seq[char] base;
+        int length;
+    }
+
+    struct slice_t {
+        slc[char] base;
+        int length;
+    }
+
+    t(seq[char] base) init = ${
+        t new = {
+            base,
+            std_strlen(base)
+        };
+        return new;
+    }
+
+    stateful(ref[t]) {
+        slice_t() decodeGlyph_string = ${
+        }
+        int() decodeGlyph_int = ${
+        }
+        void(seq[char] dest) decodeGlyph_copy = ${
+        }
+    }
+    stateful slice_t(ref[slice_t]) next = ${
+        slice_t thisGlyph = state@decodeGlyph_string();
+        state.base += thisGlyph.length;
+        state.length -= thisGlyph.length;
+        return thisGlyph;
+    }
+}
+
+int() main = ${
+    utf8_t string = utf8_init("hello world! 😊\n");
+
+    stateof utf8_next iter = copy string;
+
+    utf8_t glyph;
+
+    arr[8, char] buffer;
+
+    while ((glyph = iter()).length > 0) {
+        glyph@decodeGlyph((seq[char])buffer);
+        std_printf("This character: %s\n", buffer);
+    }
+}
