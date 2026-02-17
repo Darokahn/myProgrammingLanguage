@@ -12,5 +12,5 @@ When the block is exited, the proper matched enumeration is written into the poi
 
 Functions can return a `blockstatus` type, which is a `bool`. Reentrant blocks have a contract with two types of function: One with functions that return `blockstatus` solely, and one with functions that return a struct containing `blockstatus` as their *first* member.
 
-That contract is to virtually strip the signature, removing the `blockstatus` variable from it. Instead, the `reentrant` block will handle the implicit manual process: check whether `blockstatus` is false (did not block), break back out if not. Functions returning `blockstatus` instead return `void`; structs can be used in assignment (Go-style) without the `blockstatus` field present.
+That contract is to virtually strip the signature, removing the `blockstatus` variable from it. Instead, the `reentrant` block will handle the implicit manual process: check whether `blockstatus` is false (would not block), break back out if not. Functions returning `blockstatus` instead return `void`; structs can be used in assignment (Go-style) without the `blockstatus` field present.
 
