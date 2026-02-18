@@ -2,10 +2,6 @@
 
 This is a simple QOL feature that helps users manage the ugliest of nesting messes by telling a new block to inherit the remainder of its scope.
 
-There must be some solution, since the language introduces quite a few features that take advantage of nested blocks.
-
-It can be abused, but luckily the cases where it *is* and *isn't* appropriate are relatively clear.
-
 The `*` character can appear where a block would be expected. It must be followed by a newline. It says that whatever is left in the enclosing block instead belongs to the new block.
 
 For example, `namespace` declarations can be placed at the file scope. If you write `namespace x *\n`, the remainder of the file is put in namespace `x`.
@@ -17,13 +13,13 @@ int a;
 int b;
 ```
 
-The language introduces coroutines via `reentrant` blocks. Most often, you want a whole function to be reentrant (here is pseudocode to avoid needing to explain `reentrant` fully)
+The language introduces coroutines via `reentrant` blocks. You can label any block as reentrant. Often, you want this to apply to the entire body of a function.
 
 Normally, this would require a `reentrant` function's entire body to be nested for no real reason.
 
 ```c
-    void(int x) func = ${
-        reentrant (...) {
+    void(ref[int] x) func = ${
+        reentrant (x) {
             ...
         }
     }
@@ -32,8 +28,8 @@ Normally, this would require a `reentrant` function's entire body to be nested f
 Instead,
 
 ```c
-    void(int x) func = ${
-        reentrant (...) *
+    void(ref[int] x) func = ${
+        reentrant (x) *
         ...
     }
 ```
