@@ -8,6 +8,6 @@ I'm probably exaggerating this, but naming bool variables is a significant pain 
 
 This probably doesn't honestly matter, as inter-dialect and especially inter-language codebases are always a pain and this only removes a drop from that bucket, but it may be worth bringing up that using question marks instead of to-be verbs or other signals makes codebases more symmetrical. A famous post alleges that Canadian developers append "Eh" to the end of booleans, as in "isRed, eh?"
 
-int draw(uint16\_t* sprite, bool useTransparency?);
+`int draw(uint16_t* sprite, bool useTransparency?);`
 
 As for why I'm not a fan of ternaries, I have a nasty habit of using branchless code wherever possible. I prefer to use `if` only to skip code, and many patterns don't really need to skip code; they need to do a single routine with a computed parameter. I don't like ternaries because they *appear* branchless (not using any conventional control flow structures), but may or may not compile to branchless code.

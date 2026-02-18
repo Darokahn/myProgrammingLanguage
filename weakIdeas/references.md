@@ -1,4 +1,4 @@
-~This document is the old version of a more refined idea, which is under the same name in ../strongIdeas~
+~This document is the old version of a more refined idea, which is under the same name in ../strongIdeas
 
 # C pointers are kind of broken, and C++ adds gas to the fire.
 
