@@ -1,6 +1,7 @@
 import std;
 
 namespace utf8 {
+
     struct t {
         seq[char] base;
         int length;
@@ -11,7 +12,7 @@ namespace utf8 {
         int length;
     }
 
-    t(seq[char] base) init = ${
+    t (seq[char] base) init = ${
         t new = {
             base,
             std_strlen(base)
@@ -19,33 +20,63 @@ namespace utf8 {
         return new;
     }
 
+    _arr[u8] prefixCodes = {
+        0x0,
+        0xC0,
+        0xE0,
+        0xF0
+    }
+
+    uint(u8 cont, int accumTotal) addContinuation = ${
+        accumTotal <<= 6;
+        accumTotal += cont & 0x3F;
+        return accumTotal;
+    }
+
+    int(u8 start, int length) getInitial = ${
+        u8 code = prefixCodes[length];
+        int initialVal = start & (~code);
+        return initialVal;
+    }
+
+    int(u8 prefix) getByteCount = ${
+        if (prefix == 0) return 0;
+        u8 leading;
+        int byteCount = 0;
+        for (leading = prefix; (leading << byteCount) & 0x80; byteCount++);
+        if (byteCount == 0) byteCount = 1;
+        return byteCount;
+    }
+
     stateful(ref[t]) {
         slice_t() decodeGlyph_string = ${
+            slice_t newString = copy state;
+            newString.length = getByteCount(newString.base[0]);
+            return newString;
         }
+
         int() decodeGlyph_int = ${
+            slice_t newGlyph = state@decodeGlyph_string();
+            int codePoint = getInitial(newGlyph.base[0], newGlyph.length);
+            for (int i = 0; i < newGlyph.length - 1; i++) {
+                codePoint = addContinuation(newGlyph.base[i + 1], codePoint);
+            }
+            return codePoint;
         }
+
         void(seq[char] dest) decodeGlyph_copy = ${
+            slice_t newGlyph = state@decodeGlyph_string();
+            for (int i = 0; i < newGlyph.length; i++) {
+                dest[i] = newGlyph.base[i];
+            }
+            dest[newGlyph.length] = '\0';
         }
-    }
-    stateful slice_t(ref[slice_t]) next = ${
-        slice_t thisGlyph = state@decodeGlyph_string();
-        state.base += thisGlyph.length;
-        state.length -= thisGlyph.length;
-        return thisGlyph;
-    }
-}
 
-int() main = ${
-    utf8_t string = utf8_init("hello world! 😊\n");
-
-    stateof utf8_next iter = copy string;
-
-    utf8_t glyph;
-
-    arr[8, char] buffer;
-
-    while ((glyph = iter()).length > 0) {
-        glyph@decodeGlyph((seq[char])buffer);
-        std_printf("This character: %s\n", buffer);
+        stateful_slice_t(ref[slice_t]) next = ${
+            slice_t thisGlyph = state@decodeGlyph_string();
+            state.base += thisGlyph.length;
+            state.length -= thisGlyph.length;
+            return thisGlyph;
+        }
     }
 }
