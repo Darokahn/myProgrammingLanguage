@@ -47,6 +47,7 @@ Therefore, `<block> || <block>` only runs the second block if the first one fail
     } || {
         printf("x >= 10\n")
     }
+```
 
 The main drawback of this is that it takes getting used to, but I think it's an elegant and compositional way to handle control flow. I also think that with some syntax highlighting and experience reading/writing this language, it will not cost any cognitive overhead.
 
