@@ -1,6 +1,6 @@
 # Nesting can get overbearing.
 
-This is a simple QOL feature that helps users manage the ugliest of nesting messes by telling a new block to inherit the remainder of its scope.
+This is a simple QOL feature that helps users manage the ugliest of nesting messes by telling a new block to inherit the remainder of its enclosing scope.
 
 The `*` character can appear where a block would be expected. It must be followed by a newline. It says that whatever is left in the enclosing block instead belongs to the new block.
 
@@ -39,14 +39,14 @@ is much nicer.
 Nonnesting blocks can be either much more or much less readable depending on context, and I don't think a concrete or satisfying set of rules can be made for separating good contexts from bad. I won't cherrypick constructs which can or can't access them.
 
 ```c
-    int main() = ${
+    int() main = ${
         while (true) *
         printf("hello, world!\n"); // This use case is defensible if programmers become familiar with the idiom.
     }
 ```
 
 ```c
-    int main() = ${
+    int() main = ${
         if (condition) *
         doSomething();
         moreStuff();
