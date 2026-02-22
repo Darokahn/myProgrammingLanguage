@@ -1,72 +1,78 @@
-# functions can take a state as an invisible first parameter, much like object-oriented patterns.
+# `state` is a property of a function parameter. Function parameters that are the function's `state` have special properties.
 
-functions can be tagged "stateful", which grants special properties to their first argument.
+A function's parameter can become its state if it is the first parameter, AND (
 
-1. The parameter must be called `state`, and you do not need to specify its name (type only is okay). It is best to omit the name, as the only name that would be accepted is `state`. Its type can be given as an argument to the `stateful` keyword. This option is always available, but is mainly for use with another feature that will be revealed further in the document.
-2. The parameter must be a singular immutable indirect reference type.
-3. Due to an orthogonal property of the language, the state can be used like a value despite being a reference. See `references.md` for more.
-4. `state.member` is unnecessary and can be replaced with `.member`
+The parameter is called `state`, OR
 
-This document assumes a few other properties of the language. They are not incredibly relevant but may appear surprising. They can largely be reasoned about, and their descriptions can be found in the various `.md` files in this directory.
+The parameter is not named at all.
 
-You can get the state required by a function by using `stateof`. `stateof function` can be used as an alias for the actual definition. This is the functional programming oriented way to use states, defining them anonymously in a function declaration and getting them for later use via `stateof`.
+)
+
+Inside a function which has a state, if that state has members (i.e. it is a struct), those members can be referred to via `.member` rather than `state.member`.
+
+This is a separate property of the language, but `state->member` is unnecessary if `state` is a reference type. Its members can be accessed via `.` as if it was a value.
+
+This document assumes a few other properties of the language that may appear surprising. They can often be reasoned about, but the full details about them can be found among the other `.md` files in this directory.
+
+The type of a function's state can be taken via `stateof`. It is used as if a a text-replacement preprocessor had pasted the parameter's type in place of the `stateof func` expression. 
+
+A natural pattern will be to use an anonymous type as the state variable of a function and get it back later via `stateof`.
+
+While acting like a text replacement for the type of a function's `state`, `typeof` also gives any variable declared via this replacement the property of being an alias to the function itself.
+
+It is fully usable as a variable of the specified type, but it is also callable. It calls the function it was derived from, passing itself as the state parameter.
 
 ```
-    stateful int(ref[struct {int x; int y;}], int someParam) myFunc = ${
+    int(ref struct {int x; int y;}, int someParam) myFunc = ${
         return .x + .y + someParam;
     }
+
+    int() main = ${
+        stateof myFunc x = {1, 3};
+        printf("%d\n", x(4));
+    }
 ```
 
-states gotten via `stateof` are a way to retrieve anonymous structs and other types declared inside function signatures. `stateof func` becomes whatever type the function uses as state, almost as if via text replacement. However, the compiler remembers which function they are derived from.
+As you can see, `x` is a lot like a closure that encloses specifically the parameters you tell it to.
 
-states gotten via `stateof` can act like closures for the function they are derived from. 
+If a variable is not tied to a specific function, but there are several functions whose states are the same type, those functions can of course be called with that variable as their first parameter. Alternatively, the `@` operator is a binary operator which calls its rhs with the lhs as its first parameter. Taking advantage of this can create object-oriented patterns which are very similar to in other languages.
 
-Because it is tied to a specific function, the state can be called as an alias for that function. Doing so naturally passes the state as the first parameter. 
-
-If a type is defined, used as the state value in several functions, and then created as an instance later, you can use the `@` operator to attempt to call any function with that instance:
-
-    struct myState {
-        int innerValue;
+```
+    struct myStruct {
+        int x;
+        int y;
     };
 
-    stateful void(ref[myState], int x, int y) func1 {
-        .innerValue += x + y;
+    void(myStruct) print = ${
+        printf("x: %d, y: %d\n", .x, .h);
     }
 
-    stateful void(ref[myState], char* message) func2 {
-        ...
-    }
-
-    stateful void (ref[struct {float w;}], float x) func3 {
-        ...
-    }
-
-    int () main { // note that omitted state is allowed
-        ref[myState] m1 = {3};
-        stateof func1 m2 = {1};
-        m1(); // would fail, because m1 is not tied to a function
-        m2(); // succeeds, because m2 is tied to a function
-        m1@func1(0, 1); // succeeds, because we're telling it which function to use
-        param1@func(rest of params)
-        m1@func3(0.1f); // would fail, because the state of func3 is not the same as the one we're using.
-    }
-
-This is simply a method-call-like ergonomic feature. You can always pass them as the first parameter as well. In fact, `@` is just a sugar for doing so, with one important distinction.
-
-`@` is willing to coerce any pointer type to any other pointer type implicitly. Due to a technicality of the reference system this language uses, even values are technically pointers. This allows you not to bother with taking the address of a struct every time you use `@method` (recall that the type used as a state must be a reference).
-
-A type will always be able to see functions declared in the same namespace, even without namespace resolution.
-
-This creates lightweight, function-first data-function unions, being somewhat agnostic between functional and OOP paradigms.
-It also clearly separates which members are compiletime and which ones are stored in the state at runtime, which C++ does not do. This helps the programmer keep memory in mind when declaring states and structs.
-Vtable method calls are missing from syntax, but perfectly implementable.
-Inheritance is missing from syntax by design. Favor composition. See notes on compositions in composition.md.
-
-`stateful(type)` can be used to create a block of function declarations that all use the same state.
-
-```
-    stateful(ref[struct {int a; int b;}]) {
-        void(int a, int b) func1 = ${...};
-        int(int x, float y) func2 = ${...};
+    int() main = ${
+        myStruct s;
+        s@print();
     }
 ```
+
+The `@` operator can see inside the namespace of the lhs operand. The name of the rhs operand can match a declaration from that namespace without resolving it.
+
+Note that `_` is the namespace resolution character.
+
+```
+    namespace myStruct {
+        struct t {
+            int x;
+            int y;
+        };
+        void(t) print = ${
+            printf("x: %d, y: %d\n", .x, .h);
+        }
+
+    }
+
+    int() main = ${
+        myStruct_t s;
+        s@print();
+    }
+```
+
+There is no virtual function call table. Instead, developers should create a member of a struct which is the pointer to a function, and dispatch `struct@struct.vfunc()` calls.

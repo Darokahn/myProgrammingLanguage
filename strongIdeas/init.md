@@ -20,9 +20,9 @@ The form for a declaration, when not using sugared  types, is `immut singular em
 
 There is already a slightly uneasy reasoning surface about initialization; that is, which values do embedded pointers take as initializers? They're technically pointers, so how do I give them an inner value? This will be resolved.
 
-The important subtle feature, and the one that brings this system further out of equilibrium, is the auto-dereference applied to `singular immut` types. This feature is fundamental to the type system and responsible for most of its virtues. Despite how it causes some problems, it is necessary in the language.
+The important subtle feature, and the one that brings this system further out of equilibrium, is the auto-dereference applied to `singular immut` types. This feature is fundamental to the type system and responsible for many of its virtues. Despite how it causes some problems, it is necessary in the language.
 
-`singular immut` types are implicitly dereferenced any time they are use in an expression. The motivation for this is that there is no reason to care about their pointer value beyond initializing what they point to. Its address cannot be changed, and you cannot derive a new pointer from it. There is no reason to use the name of a `singular immut` pointer except to dereference it or pass it elsewhere. In the case of `singular immut`, the `&` address of operator essentially "cancels" that dereference so you can use a reference in an expression without deref (almost exclusively for passing).
+`singular immut` types are implicitly dereferenced any time they are used in an expression. The motivation for this is that there is no reason to care about their pointer value beyond initializing what they point to. Its address cannot be changed, and you cannot derive a new pointer from it. There is no reason to use the name of a `singular immut` pointer except to dereference it or pass it elsewhere. In the case of `singular immut`, the `&` address of operator essentially "cancels" that dereference so you can use a reference in an expression without deref (almost exclusively for passing).
 
 `immut singular embedded` is the type of the value-like pointers mentioned earlier. In fact, `immut singular embedded &T` is infinitely equivalent to `T`. You can nest i as many times as you want, and it does not become a new type.
 

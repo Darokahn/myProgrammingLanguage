@@ -2,16 +2,6 @@
 
 # Unified Pointer Type System
 
-## Core Concept
-
-Pointers can be unified into three main use cases, but the ruleset we apply can be plotted as a full matrix of 8 different pointer types.
-
-The three pointer types you really need are **singular**, **plural**, and **array**:
-
-- **Singular** is like C++ reference: A pointer to just one value, with no ambiguity as to whether it is a pointer to the beginning of several values.
-- **Plural** is like a raw C pointer, allowing indexing and arithmetic.
-- **Array** is like a C array, allocating its space on the stack and being immutable (not a valid lvalue). There is no reasonable or ergonomic way to decouple statically allocating memory in a data structure from acquiring that memory via a named variable, so this type must have a place.
-
 ## Compositional Rules
 
 Any pointer type can be composed from these orthogonal properties:
