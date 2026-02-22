@@ -3,9 +3,8 @@
 functions can be tagged "stateful", which grants special properties to their first argument.
 
 1. The parameter must be called `state`, and you do not need to specify its name (type only is okay). It is best to omit the name, as the only name that would be accepted is `state`. Its type can be given as an argument to the `stateful` keyword. This option is always available, but is mainly for use with another feature that will be revealed further in the document.
-2. The parameter must be a singular immutable indirect reference type.
-3. Due to an orthogonal property of the language, the state can be used like a value despite being a reference. See `references.md` for more.
-4. `state.member` is unnecessary and can be replaced with `.member`
+2. Due to an orthogonal property of the language, the state can be used like a value despite possibly being a reference. See `references.md` for more.
+3. `state.member` is unnecessary and can be replaced with `.member`
 
 This document assumes a few other properties of the language. They are not incredibly relevant but may appear surprising. They can largely be reasoned about, and their descriptions can be found in the various `.md` files in this directory.
 

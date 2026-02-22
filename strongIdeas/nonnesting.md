@@ -56,4 +56,4 @@ Nonnesting blocks can be either much more or much less readable depending on con
     }
 ```
 
-It is generally a matter of taste and must be up to the programmer to use them properly.
+It is generally a matter of taste and must be up to the programmer to use them properly. There is an already common, and I think growing, sentiment, that matters of taste should be stripped from programming languages. Go makes this decision as widely as possible, for example. It's probably a good sentiment for people whose code is boring (not an insult; the more boring code is, generally the better). This language is my toy, it is not for making boring code. I sincerely hope that, should anyone choose to use it professionally, their development is slowed down at least 20% because of team infighting over matters of taste.
