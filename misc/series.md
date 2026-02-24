@@ -18,13 +18,17 @@ Compound literals are similar. An assignment can interpret them and ensure they 
     arr[4, int] myArr = 1, 2, 3;
 ```
 
-## In addition to `,`, newlines can be a series continuation operator in some contexts.
+Parentheses are used to reduce ambiguity in series literals especially when nesting series. In fact, since compound statements are themselves series of statements, the edge for ambiguity is large.
 
-A newline following an object that already was a series functions the same as a comma.
+The difference is that `;` is capable of adding statements to a series, while `,` can only add expressions. Since many statements are just expressions, commas are often sufficient.
+
+Curly braces and parentheses also have a kind of duality which interacts with the different delimiters. In the presence of a curly brace, a semicolon will add a statement to the nearest-nested one. This makes it the only way to end a statement with an unenclosed series in it.
+
+## When a series is enclosed in parentheses or curly braces, a newline
 
 ```
     arr[4, int] = (
-        1,
+        1
         2
         3
         4
@@ -33,7 +37,7 @@ A newline following an object that already was a series functions the same as a 
 
 String literals compile to a series, as is typically the convention for languages.
 
-A statement containing a series must either enclose it in parentheses or use a semicolon to specify that the series has ended.
+A semicolon concludes a statement, and adds it to the series of statements in a block. A comma, and even a newline, will suffice for the same task
 
 Series that this document is currently overlooking because I haven't fully resolved them:
 
